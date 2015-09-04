@@ -29,23 +29,23 @@ void encrypt (
   //point to source buffer
   err = gpgme_data_new_from_mem(&source, pSource, strlen(pSource), 0);
   if (err != GPG_ERR_NO_ERROR) {
-    printf("Error in reading data to encrypt.\n");
+    printf("Error reading data to encrypt.\n");
     fail_if_err(err);
   }
 
   //create dest buffer
   err = gpgme_data_new(&dest);
   if (err != GPG_ERR_NO_ERROR) {
-    printf("Error in creating output data buffer to encrypt.\n");
+    printf("Error creating output data buffer to encrypt.\n");
     fail_if_err(err);
   }
 
   //encrypt text
   gpgme_encrypt_flags_t flags;
-  flags = GPGME_ENCRYPT_NO_ENCRYPT_TO | GPGME_ENCRYPT_ALWAYS_TRUST; //only specified recipient, no defaults please
+  flags = GPGME_ENCRYPT_ALWAYS_TRUST; //only specified recipient, no defaults please
   err = gpgme_op_encrypt(*context, key, flags, source, dest);
   if (err != GPG_ERR_NO_ERROR) {
-    printf("Error in encrypting data.\n");
+    printf("Error encrypting data.\n");
     fail_if_err(err);
   }
 
@@ -54,7 +54,7 @@ void encrypt (
   p[read_bytes] = 0;
 
   //retrieve result
-  printf("Result: \n%s\n", p);
+  printf("%s", p);
 
   //release key and buffers
   gpgme_key_release(key[0]);

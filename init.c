@@ -32,6 +32,10 @@ void setup(gpgme_ctx_t * context, authit_gpg_opts * options) {
   // fprintf (stderr, "Engine OpenPGP %s is installed at %s\n", info->version,
 	//    info->file_name); /* And not "path" as the documentation says */
 
+  // Use options
+  if (options == NULL) {
+    return;
+  }
   // Create the keyring is it doesnt exist
   mkdirs(options->keyring);
 
