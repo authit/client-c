@@ -2,7 +2,9 @@
 
 void authit_gpg_opts_flags_defaults(authit_gpg_opts * options) {
   strcpy(options->keyring, AUTHIT_OPT_KEYRING_DIR);
-  strcpy(options->send_to, AUTHIT_OPT_SEND_TO);
+  strcpy(options->recv, AUTHIT_OPT_RECV);
+  strcpy(options->sign, AUTHIT_OPT_SIGN);
+  strcpy(options->me, AUTHIT_OPT_ME);
 }
 
 int authit_gpg_opts_isflag(char * flag) {
@@ -44,8 +46,12 @@ void authit_gpg_opts_flags (
     }
     if (0 == strcmp("keyring", prop)) {
       strcpy(options->keyring, value);
-    } else if (0 == strcmp("send_to", prop)) {
-      strcpy(options->send_to, value);
+    } else if (0 == strcmp("recv", prop)) {
+      strcpy(options->recv, value);
+    } else if (0 == strcmp("me", prop)) {
+      strcpy(options->me, value);
+    } else if (0 == strcmp("sign", prop)) {
+      strcpy(options->sign, value);
     }
   }
 }

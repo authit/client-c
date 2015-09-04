@@ -18,10 +18,10 @@ void encrypt (
 
   //get key to encrypt, get the first key
   gpgme_key_t key[2];
-  err = gpgme_op_keylist_start(*context, options->send_to, 0);
+  err = gpgme_op_keylist_start(*context, options->recv, 0);
   err = gpgme_op_keylist_next (*context, key);
   if (err) {
-    printf("Key not found in current key-ring: %s\n", options->send_to);
+    printf("Key not found in current key-ring: %s\n", options->recv);
     return;
   }
   key[1] = 0; //set to NULL the second entry

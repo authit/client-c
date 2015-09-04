@@ -10,12 +10,16 @@
 
 // Defaults for linux
   #define AUTHIT_OPT_KEYRING_DIR "keys/client/keyring"
-  #define AUTHIT_OPT_SEND_TO "First Last"
+  #define AUTHIT_OPT_RECV "First Last"
+  #define AUTHIT_OPT_SIGN "false"
+  #define AUTHIT_OPT_ME "Client"
 
 
 typedef struct authit_gpg_opts_struct {
   char keyring[AUTHIT_STRING_SIZE];
-  char send_to[AUTHIT_STRING_SIZE];
+  char recv[AUTHIT_STRING_SIZE];
+  char sign[AUTHIT_STRING_SIZE];
+  char me[AUTHIT_STRING_SIZE];
 } authit_gpg_opts;
 
 #endif

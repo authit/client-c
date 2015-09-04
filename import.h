@@ -15,3 +15,7 @@ void import (
   int num_keys,
   char ** key_path
 );
+void sign (
+  gpgme_ctx_t * context,
+  char * lookup
+);
