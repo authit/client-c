@@ -17,6 +17,6 @@
 void encrypt (
   gpgme_ctx_t * context,
   authit_gpg_opts * options,
-  int num_keys,
-  char ** key_path
+  int num_files,
+  char ** file_list
 );

@@ -3,63 +3,60 @@
 void encrypt (
   gpgme_ctx_t * context,
   authit_gpg_opts * options,
-  int num_keys,
-  char ** key_path
+  int num_files,
+  char ** file_list
   )
 {
-  gpgme_error_t error;
-  gpgme_key_t recipients[2] = {NULL, NULL};
-  gpgme_data_t clear_text, encrypted_text;
-  gpgme_encrypt_result_t  result;
-  gpgme_user_id_t user;
-  char *buffer;
-  ssize_t nbytes;
+  char * p;
+  char * pSource;
+  size_t read_bytes;
+  gpgme_error_t err;
+  gpgme_data_t source;
+  gpgme_data_t dest;
 
-  error = gpgme_op_keylist_start(*context, options->send_to, 1);
-  fail_if_err(error);
-  error = gpgme_op_keylist_next(*context, &recipients[0]);
-  fail_if_err(error);
-  error = gpgme_op_keylist_end(*context);
-  fail_if_err(error);
+  pSource = file_list[0];
 
-  user = recipients[0]->uids;
-  printf("Encrypting for %s <%s>\n", user->name, user->email);
-
-  /* Prepare the data buffers */
-  error = gpgme_data_new_from_mem(&clear_text, SENTENCE, strlen(SENTENCE), 1);
-  fail_if_err(error);
-  error = gpgme_data_new(&encrypted_text);
-  fail_if_err(error);
-
-  /* Encrypt */
-  error = gpgme_op_encrypt(*context, recipients,
-			   GPGME_ENCRYPT_ALWAYS_TRUST, clear_text, encrypted_text);
-  fail_if_err(error);
-  result = gpgme_op_encrypt_result(*context);
-  if (result->invalid_recipients)
-    {
-      fprintf (stderr, "Invalid recipient found: %s\n",
-	       result->invalid_recipients->fpr);
-      exit (1);
-    }
-
-  nbytes = gpgme_data_seek (encrypted_text, 0, SEEK_SET);
-  if (nbytes == -1) {
-    fprintf (stderr, "%s:%d: Error in data seek: ",
-	     __FILE__, __LINE__);
-    perror("");
-    exit (1);
-    }
-  buffer = malloc(MAXLEN);
-  nbytes = gpgme_data_read(encrypted_text, buffer, MAXLEN);
-  if (nbytes == -1) {
-    fprintf (stderr, "%s:%d: %s\n",
-	     __FILE__, __LINE__, "Error in data read");
-    exit (1);
+  //get key to encrypt, get the first key
+  gpgme_key_t key[2];
+  err = gpgme_op_keylist_start(*context, options->send_to, 0);
+  err = gpgme_op_keylist_next (*context, key);
+  if (err) {
+    printf("Key not found in current key-ring: %s\n", options->send_to);
+    return;
   }
-  buffer[nbytes] = '\0';
-  printf("Encrypted text (%i bytes):\n%s\n", (int)nbytes, buffer);
-  free(buffer);
+  key[1] = 0; //set to NULL the second entry
 
-  exit(0);
+  //point to source buffer
+  err = gpgme_data_new_from_mem(&source, pSource, strlen(pSource), 0);
+  if (err != GPG_ERR_NO_ERROR) {
+    printf("Error in reading data to encrypt.\n");
+    fail_if_err(err);
+  }
+
+  //create dest buffer
+  err = gpgme_data_new(&dest);
+  if (err != GPG_ERR_NO_ERROR) {
+    printf("Error in creating output data buffer to encrypt.\n");
+    fail_if_err(err);
+  }
+
+  //encrypt text
+  gpgme_encrypt_flags_t flags;
+  flags = GPGME_ENCRYPT_NO_ENCRYPT_TO | GPGME_ENCRYPT_ALWAYS_TRUST; //only specified recipient, no defaults please
+  err = gpgme_op_encrypt(*context, key, flags, source, dest);
+  if (err != GPG_ERR_NO_ERROR) {
+    printf("Error in encrypting data.\n");
+    fail_if_err(err);
+  }
+
+  p = gpgme_data_release_and_get_mem(dest, &read_bytes);
+
+  p[read_bytes] = 0;
+
+  //retrieve result
+  printf("Result: \n%s\n", p);
+
+  //release key and buffers
+  gpgme_key_release(key[0]);
+  gpgme_data_release(source);
 }

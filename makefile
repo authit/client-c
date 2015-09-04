@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -D_FILE_OFFSET_BITS=64
 LDFLAGS=$(shell gpgme-config --libs)
 LDFLAGS+=$(shell gpg-error-config --libs)
 LDFLAGS+=$(shell libassuan-config --libs)
