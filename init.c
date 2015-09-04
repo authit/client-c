@@ -1,7 +1,7 @@
 #include "init.h"
 
 
-void setup(gpgme_ctx_t * context, telem_gpg_opts * options) {
+void setup(gpgme_ctx_t * context, authit_gpg_opts * options) {
   gpgme_error_t error;
   // gpgme_engine_info_t info;
 
@@ -64,7 +64,7 @@ void mkdirs(const char *dir) {
     }
   mkdir(tmp, S_IRWXU);
 }
-void setup_options(telem_gpg_opts * options) {
-  strcpy(options->keyring_dir, TELEM_OPT_KEYRING_DIR);
-  strcpy(options->send_to, TELEM_OPT_SEND_TO);
+void setup_options(authit_gpg_opts * options) {
+  strcpy(options->keyring_dir, AUTHIT_OPT_KEYRING_DIR);
+  strcpy(options->send_to, AUTHIT_OPT_SEND_TO);
 }

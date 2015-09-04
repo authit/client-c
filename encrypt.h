@@ -16,7 +16,7 @@
 
 void encrypt (
   gpgme_ctx_t * context,
-  telem_gpg_opts * options,
+  authit_gpg_opts * options,
   int num_keys,
   char ** key_path
 );

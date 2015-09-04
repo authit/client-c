@@ -1,21 +1,36 @@
 #include "gpg_opts.h"
 
-void telem_gpg_opts_flags (
+void authit_gpg_opts_flags (
   int argc,
   char ** argv,
-  telem_gpg_opts * options
+  authit_gpg_opts * options
 ) {
   char * current;
-  char prop[TELEM_STRING_SIZE];
-  char value[TELEM_STRING_SIZE];
+  char prop[AUTHIT_STRING_SIZE];
+  char value[AUTHIT_STRING_SIZE];
   for (; argc; --argc) {
     current = *argv++;
-    if (strstr(current, "=") && strlen(current) < TELEM_STRING_SIZE) {
-      printf("telem_gpg_opts_flags\t%s\t", current);
-      sscanf(current, "%*[^-]%s%*[^=]%s", prop, value);
-      printf("'%s'\t'%s'\n", prop, value);
-      if (0 == strcmp("encrypt", prop)) {
-      }
+    strcpy(prop, "");
+    strcpy(value, "");
+    if (strnlen(current, AUTHIT_STRING_SIZE) > AUTHIT_STRING_SIZE &&
+      !strstr(current, "=") &&
+      !strstr(current, "--")
+      )
+    {
+      continue;
+    }
+    sscanf(current, "--%[^=]=%s", prop, value);
+    // If these are empty the flag is not valid
+    if (strnlen(prop, AUTHIT_STRING_SIZE) < 1)
+    {
+      continue;
+    }
+    if (strnlen(value, AUTHIT_STRING_SIZE) < 1)
+    {
+      strcpy(value, "true");
+    }
+    printf("'%s'\t'%s'\n", prop, value);
+    if (0 == strcmp("encrypt", prop)) {
     }
   }
 }

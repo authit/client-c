@@ -21,23 +21,23 @@ const char * USAGE[] = {"import keys...", "encrypt files...", "\0"};
 int main (int argc, char **argv)
 {
   gpgme_ctx_t context;
-  telem_gpg_opts options;
+  authit_gpg_opts options;
   // The function to call
   void (*action)(
     gpgme_ctx_t *,
-    telem_gpg_opts *,
+    authit_gpg_opts *,
     int,
     char **
   ) = NULL;
 
   setup(&context, &options);
-  telem_gpg_opts_flags(argc, argv, &options);
+  authit_gpg_opts_flags(argc, argv, &options);
 
   argv++;
   if (argc > 2) {
-    if (0 == strncmp("import", argv[0], TELEM_STRING_SIZE)) {
+    if (0 == strncmp("import", argv[0], AUTHIT_STRING_SIZE)) {
       action = import;
-    } else if (0 == strncmp("encrypt", argv[0], TELEM_STRING_SIZE)) {
+    } else if (0 == strncmp("encrypt", argv[0], AUTHIT_STRING_SIZE)) {
       action = encrypt;
     }
     if (action != NULL) {

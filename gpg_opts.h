@@ -2,26 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Options for telem_gpg
-#ifndef TELEM_OPT
-#define TELEM_OPT 1
+// Options for authit_gpg
+#ifndef AUTHIT_OPT
+#define AUTHIT_OPT 1
 
-#define TELEM_STRING_SIZE 200
+#define AUTHIT_STRING_SIZE 200
 
 // Defaults for linux
-  #define TELEM_OPT_KEYRING_DIR "../../keys/client/keyring_dir"
-  #define TELEM_OPT_SEND_TO "First Last"
+  #define AUTHIT_OPT_KEYRING_DIR "../../keys/client/keyring_dir"
+  #define AUTHIT_OPT_SEND_TO "First Last"
 
 
-typedef struct telem_gpg_opts_struct {
-  char keyring_dir[TELEM_STRING_SIZE];
-  char send_to[TELEM_STRING_SIZE];
-} telem_gpg_opts;
+typedef struct authit_gpg_opts_struct {
+  char keyring_dir[AUTHIT_STRING_SIZE];
+  char send_to[AUTHIT_STRING_SIZE];
+} authit_gpg_opts;
 
 #endif
 
-void telem_gpg_opts_flags (
+void authit_gpg_opts_flags (
   int argc,
   char ** argv,
-  telem_gpg_opts * options
+  authit_gpg_opts * options
 );
