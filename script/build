@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+PRODUCT_NAME="client-c"
+GITHUB_USERNAME="authit"
+BUILD_DIR="./"
+
+if [ -z "$1" ]; then
+    OS_PLATFORM_ARG=(-os="darwin linux windows")
+else
+    OS_PLATFORM_ARG=($1)
+fi
+
+if [ -z "$2" ]; then
+    OS_ARCH_ARG=(-arch="386 amd64 arm")
+else
+    OS_ARCH_ARG=($2)
+fi
+
+# Build Docker image unless we opt out of it
+if [[ -z "$SKIP_BUILD" ]]; then
+    docker build -t "${PRODUCT_NAME}_compiler" -f Dockerfile.compiler .
+fi
+
+# Get rid of existing binaries
+mkdir -p ${BUILD_DIR}
+rm -f ${BUILD_DIR}${PRODUCT_NAME}*
+rm -rf Godeps/_workspace/pkg
+docker run --rm -v `pwd`:/go/src/github.com/${GITHUB_USERNAME}/${PRODUCT_NAME} "${PRODUCT_NAME}_compiler" make
