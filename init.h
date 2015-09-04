@@ -10,5 +10,4 @@
 #include "error.h"
 
 void setup(gpgme_ctx_t * context, authit_gpg_opts * options);
-void setup_options(authit_gpg_opts * options);
 void mkdirs(const char *dir);

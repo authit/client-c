@@ -30,8 +30,12 @@ int main (int argc, char **argv)
     char **
   ) = NULL;
 
-  setup(&context, &options);
+  // Set the defaults
+  authit_gpg_opts_flags_defaults(&options);
+  // Set the flags
   authit_gpg_opts_flags(argc, argv, &options);
+  // Setup gpgme
+  setup(&context, &options);
 
   argv++;
   if (argc > 2) {
@@ -44,10 +48,14 @@ int main (int argc, char **argv)
       // Second time argv was incremented, thus removing program name
       // and the action name
       argv++;
+      argc -= 2;
+      for (; argc && authit_gpg_opts_isflag(argv[0]); --argc) {
+        argv++;
+      };
       action(
         &context,
         &options,
-        argc-2,
+        argc,
         argv
       );
     }

@@ -5,8 +5,6 @@ void setup(gpgme_ctx_t * context, authit_gpg_opts * options) {
   gpgme_error_t error;
   // gpgme_engine_info_t info;
 
-  // Set the defaults
-  setup_options(options);
   /* Initializes gpgme */
   gpgme_check_version (NULL);
 
@@ -34,15 +32,15 @@ void setup(gpgme_ctx_t * context, authit_gpg_opts * options) {
   // fprintf (stderr, "Engine OpenPGP %s is installed at %s\n", info->version,
 	//    info->file_name); /* And not "path" as the documentation says */
 
-  // Create the keyring_dir is it doesnt exist
-  mkdirs(options->keyring_dir);
+  // Create the keyring is it doesnt exist
+  mkdirs(options->keyring);
 
   /* Initializes the context */
   error = gpgme_ctx_set_engine_info(
     *context,
     GPGME_PROTOCOL_OpenPGP,
     NULL,
-    options->keyring_dir
+    options->keyring
   );
   fail_if_err(error);
 }
@@ -63,8 +61,4 @@ void mkdirs(const char *dir) {
       *p = '/';
     }
   mkdir(tmp, S_IRWXU);
-}
-void setup_options(authit_gpg_opts * options) {
-  strcpy(options->keyring_dir, AUTHIT_OPT_KEYRING_DIR);
-  strcpy(options->send_to, AUTHIT_OPT_SEND_TO);
 }

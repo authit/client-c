@@ -9,17 +9,19 @@
 #define AUTHIT_STRING_SIZE 200
 
 // Defaults for linux
-  #define AUTHIT_OPT_KEYRING_DIR "../../keys/client/keyring_dir"
+  #define AUTHIT_OPT_KEYRING_DIR "keys/client/keyring"
   #define AUTHIT_OPT_SEND_TO "First Last"
 
 
 typedef struct authit_gpg_opts_struct {
-  char keyring_dir[AUTHIT_STRING_SIZE];
+  char keyring[AUTHIT_STRING_SIZE];
   char send_to[AUTHIT_STRING_SIZE];
 } authit_gpg_opts;
 
 #endif
 
+void authit_gpg_opts_flags_defaults(authit_gpg_opts * options);
+int authit_gpg_opts_isflag(char * flag);
 void authit_gpg_opts_flags (
   int argc,
   char ** argv,

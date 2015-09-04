@@ -1,5 +1,21 @@
 #include "gpg_opts.h"
 
+void authit_gpg_opts_flags_defaults(authit_gpg_opts * options) {
+  strcpy(options->keyring, AUTHIT_OPT_KEYRING_DIR);
+  strcpy(options->send_to, AUTHIT_OPT_SEND_TO);
+}
+
+int authit_gpg_opts_isflag(char * flag) {
+  if (strnlen(flag, AUTHIT_STRING_SIZE) < AUTHIT_STRING_SIZE &&
+    strstr(flag, "=") &&
+    strstr(flag, "--")
+    )
+  {
+    return 1;
+  }
+  return 0;
+}
+
 void authit_gpg_opts_flags (
   int argc,
   char ** argv,
@@ -12,10 +28,7 @@ void authit_gpg_opts_flags (
     current = *argv++;
     strcpy(prop, "");
     strcpy(value, "");
-    if (strnlen(current, AUTHIT_STRING_SIZE) > AUTHIT_STRING_SIZE &&
-      !strstr(current, "=") &&
-      !strstr(current, "--")
-      )
+    if (!authit_gpg_opts_isflag(current))
     {
       continue;
     }
@@ -29,8 +42,10 @@ void authit_gpg_opts_flags (
     {
       strcpy(value, "true");
     }
-    printf("'%s'\t'%s'\n", prop, value);
-    if (0 == strcmp("encrypt", prop)) {
+    if (0 == strcmp("keyring", prop)) {
+      strcpy(options->keyring, value);
+    } else if (0 == strcmp("send_to", prop)) {
+      strcpy(options->send_to, value);
     }
   }
 }
